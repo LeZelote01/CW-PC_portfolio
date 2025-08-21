@@ -1,0 +1,49 @@
+# Configuration Netlify pour le Dashboard d'Administration
+# À déployer comme site séparé sur Netlify
+
+[build]
+  base = "."
+  publish = "build"
+  command = "yarn build"
+
+[build.environment]
+  NODE_VERSION = "18"
+  YARN_VERSION = "1.22.22"
+
+# Redirections pour SPA (Single Page Application)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[dev]
+  command = "yarn start"
+  port = 3001
+  publish = "build"
+
+# Variables d'environnement pour production
+[context.production.environment]
+  REACT_APP_BACKEND_URL = "https://your-backend-api.com"
+
+# Variables d'environnement pour les previews
+[context.deploy-preview.environment]
+  REACT_APP_BACKEND_URL = "https://your-backend-api.com"
+
+# Variables d'environnement pour les branches
+[context.branch-deploy.environment]
+  REACT_APP_BACKEND_URL = "https://your-backend-api.com"
+
+# Configuration de sécurité avancée pour l'admin
+[context.production]
+  # Optionnel: Restriction d'accès par IP (à configurer dans Netlify UI)
+  # ou authentification Netlify Identity
+
+# Headers de sécurité pour l'admin
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:"
