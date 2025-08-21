@@ -1,0 +1,30 @@
+[build]
+  base = "frontend/"
+  publish = "frontend/build"
+  command = "yarn build"
+
+[build.environment]
+  NODE_VERSION = "18"
+  YARN_VERSION = "1.22.22"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[dev]
+  command = "yarn start"
+  port = 3000
+  publish = "frontend/build"
+
+# Environment variables for production
+[context.production.environment]
+  REACT_APP_BACKEND_URL = "https://your-api-domain.com"
+
+# Environment variables for deploy previews
+[context.deploy-preview.environment]
+  REACT_APP_BACKEND_URL = "https://your-api-domain.com"
+
+# Environment variables for branch deploys
+[context.branch-deploy.environment]
+  REACT_APP_BACKEND_URL = "https://your-api-domain.com"
