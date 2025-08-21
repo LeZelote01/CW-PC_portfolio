@@ -100,8 +100,9 @@ const Portfolio = () => {
       {/* Projects Grid */}
       <section className="py-16 bg-white dark:bg-gray-900">
         <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {filteredProjects.map((project, index) => (
+          {filteredProjects && filteredProjects.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {filteredProjects.map((project, index) => (
               <Card key={project.id} className={`group overflow-hidden hover:shadow-xl transition-all duration-300 ${index % 2 === 0 ? 'md:mt-0' : 'md:mt-8'}`}>
                 <div className="relative overflow-hidden h-64">
                   <img
