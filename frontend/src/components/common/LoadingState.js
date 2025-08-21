@@ -72,4 +72,4 @@ export const ErrorMessage = ({ error, className = '' }) => (
   </div>
 );
 
-export default LoadingSpinner;
+export default LoadingSpinner;// Force recompile
