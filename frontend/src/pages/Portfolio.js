@@ -174,6 +174,13 @@ const Portfolio = () => {
               </Card>
             ))}
           </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-600 dark:text-gray-300 text-lg">
+                Aucun projet trouvé pour cette catégorie.
+              </p>
+            </div>
+          )}
         </div>
       </section>
 
