@@ -195,6 +195,9 @@ frontend:
         - working: true
           agent: "main"
           comment: "✅ Dashboard admin installé et testé sur port 3001. Page de login fonctionnelle avec authentification sécurisée (mot de passe demo: admin123)."
+        - working: true
+          agent: "testing"
+          comment: "✅ Tests Playwright Dashboard Admin complets sur http://localhost:3001. Login avec 'admin123' réussi, redirection vers dashboard, titre 'Admin Dashboard' vérifié, navigation complète (Projets, Profil, Services, Compétences, Témoignages, Messages), statistiques dashboard affichées, éléments interactifs fonctionnels. API admin intégrée."
 
   - task: "Vérification configurations Netlify"
     implemented: true
