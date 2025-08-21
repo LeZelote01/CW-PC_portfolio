@@ -153,6 +153,9 @@ frontend:
         - working: true
           agent: "main"
           comment: "✅ Portfolio React installé et testé. Page d'accueil avec section hero, statistiques (5+ ans, 150+ projets, 80+ clients), 4 services tarifés. Navigation fonctionnelle."
+        - working: true
+          agent: "testing"
+          comment: "✅ Tests Playwright complets réussis sur http://localhost:3000. Hero section 'Rédacteur de Contenu Professionnel' vérifié, statistiques exactes (5+, 150+, 80+), 4 services avec prix (150€, 300€, 200€, 500€), navigation toutes pages, langue FR/EN, mode sombre/clair, responsivité mobile(375px)/tablette(768px)/desktop(1920px). API backend intégrée et fonctionnelle."
 
   - task: "Test page Portfolio avec projets"
     implemented: true
