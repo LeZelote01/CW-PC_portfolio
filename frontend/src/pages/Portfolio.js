@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { ArrowRight, Calendar, User, ExternalLink, Tag } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { portfolioData } from '../data/temporaryData';
+import { useProjects } from '../hooks/usePortfolioData';
+import { LoadingSpinner, ErrorMessage } from '../components/common/LoadingState';
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 
 const Portfolio = () => {
   const { t, language } = useLanguage();
-  const { projects } = portfolioData;
   const [selectedCategory, setSelectedCategory] = useState('All');
+  
+  // Fetch projects from API
+  const { projects, loading: projectsLoading, error: projectsError } = useProjects();
 
   const categories = ['All', 'Content Strategy', 'Copywriting', 'Technical Writing', 'Blog Writing'];
   
