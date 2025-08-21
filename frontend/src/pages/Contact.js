@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send, Clock, CheckCircle } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { portfolioData } from '../data/temporaryData';
+import { useProfile, useContact } from '../hooks/usePortfolioData';
+import { LoadingSpinner, ErrorMessage } from '../components/common/LoadingState';
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { Input } from '../components/ui/input';
@@ -11,7 +12,8 @@ import { useToast } from '../hooks/use-toast';
 
 const Contact = () => {
   const { t, language } = useLanguage();
-  const { profile } = portfolioData;
+  const { profile, loading: profileLoading, error: profileError } = useProfile();
+  const { sendMessage, loading: sendingMessage, error: sendError, success } = useContact();
   const { toast } = useToast();
   
   const [formData, setFormData] = useState({
@@ -20,8 +22,6 @@ const Contact = () => {
     subject: '',
     message: ''
   });
-  
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -33,20 +33,24 @@ const Contact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
     
-    // Simulate form submission (will be replaced with real backend integration)
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      await sendMessage(formData);
       toast({
         title: "Message envoyé !",
         description: "Merci pour votre message. Je vous répondrai dans les plus brefs délais.",
       });
       setFormData({ name: '', email: '', subject: '', message: '' });
-    }, 2000);
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible d'envoyer le message. Veuillez réessayer.",
+        variant: "destructive",
+      });
+    }
   };
 
-  const contactInfo = [
+  const contactInfo = profile ? [
     {
       icon: Mail,
       title: 'Email',
@@ -68,7 +72,7 @@ const Contact = () => {
       description: 'Télétravail disponible',
       link: '#'
     }
-  ];
+  ] : [];
 
   const services = [
     'Rédaction d\'articles de blog',
@@ -96,34 +100,51 @@ const Contact = () => {
       {/* Contact Information */}
       <section className="py-16 bg-white dark:bg-gray-900">
         <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            {contactInfo.map((info, index) => {
-              const Icon = info.icon;
-              return (
-                <Card key={index} className="text-center p-6 hover:shadow-lg transition-all duration-300 hover:scale-105">
-                  <CardContent className="space-y-4">
-                    <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto">
-                      <Icon className="h-8 w-8 text-green-600 dark:text-green-400" />
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                      {info.title}
-                    </h3>
-                    <p className="text-lg text-gray-900 dark:text-white font-medium">
-                      {info.content}
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {info.description}
-                    </p>
-                    {info.link !== '#' && (
-                      <Button variant="outline" size="sm" asChild>
-                        <a href={info.link}>Contacter</a>
-                      </Button>
-                    )}
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
+          {profileLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+              {Array.from({ length: 3 }).map((_, index) => (
+                <div key={index} className="animate-pulse">
+                  <div className="bg-gray-200 dark:bg-gray-700 rounded-lg p-6 space-y-4">
+                    <div className="w-16 h-16 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto"></div>
+                    <div className="h-6 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                    <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                    <div className="h-3 bg-gray-300 dark:bg-gray-600 rounded w-2/3 mx-auto"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : profileError ? (
+            <ErrorMessage error={profileError} />
+          ) : profile ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+              {contactInfo.map((info, index) => {
+                const Icon = info.icon;
+                return (
+                  <Card key={index} className="text-center p-6 hover:shadow-lg transition-all duration-300 hover:scale-105">
+                    <CardContent className="space-y-4">
+                      <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto">
+                        <Icon className="h-8 w-8 text-green-600 dark:text-green-400" />
+                      </div>
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                        {info.title}
+                      </h3>
+                      <p className="text-lg text-gray-900 dark:text-white font-medium">
+                        {info.content}
+                      </p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {info.description}
+                      </p>
+                      {info.link !== '#' && (
+                        <Button variant="outline" size="sm" asChild>
+                          <a href={info.link}>Contacter</a>
+                        </Button>
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          ) : null}
         </div>
       </section>
 
@@ -137,6 +158,24 @@ const Contact = () => {
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
                   Envoyez-moi un message
                 </h2>
+                
+                {success && (
+                  <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                    <div className="flex items-center text-green-700 dark:text-green-300">
+                      <CheckCircle className="h-5 w-5 mr-2" />
+                      <span className="font-medium">Message envoyé avec succès !</span>
+                    </div>
+                  </div>
+                )}
+                
+                {sendError && (
+                  <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                    <div className="flex items-center text-red-700 dark:text-red-300">
+                      <span className="font-medium">Erreur : {sendError}</span>
+                    </div>
+                  </div>
+                )}
+                
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
@@ -149,6 +188,7 @@ const Contact = () => {
                         onChange={handleInputChange}
                         required
                         placeholder="Votre nom complet"
+                        disabled={sendingMessage}
                       />
                     </div>
                     <div className="space-y-2">
@@ -161,6 +201,7 @@ const Contact = () => {
                         onChange={handleInputChange}
                         required
                         placeholder="votre@email.com"
+                        disabled={sendingMessage}
                       />
                     </div>
                   </div>
@@ -175,6 +216,7 @@ const Contact = () => {
                       onChange={handleInputChange}
                       required
                       placeholder="Sujet de votre message"
+                      disabled={sendingMessage}
                     />
                   </div>
                   
@@ -188,6 +230,7 @@ const Contact = () => {
                       required
                       placeholder="Décrivez votre projet ou vos besoins..."
                       rows={6}
+                      disabled={sendingMessage}
                     />
                   </div>
                   
@@ -195,11 +238,11 @@ const Contact = () => {
                     type="submit" 
                     size="lg" 
                     className="w-full bg-green-600 hover:bg-green-700"
-                    disabled={isSubmitting}
+                    disabled={sendingMessage}
                   >
-                    {isSubmitting ? (
+                    {sendingMessage ? (
                       <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        <LoadingSpinner size="sm" className="mr-2" />
                         Envoi en cours...
                       </>
                     ) : (
