@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Il faut réinitialiser le dossier /app et cloner ce dépôt github https://github.com/LeZelote01/CW-PC_portfolio.git, ensuite analyser dans son entièreté tous les fichiers sans exception. Après analyse, corriger tous les problèmes contenus dans les images jointes qui affichaient 'Erreur de chargement'."
+user_problem_statement: "Il faut réinitialiser le dossier /app et cloner ce dépôt github https://github.com/LeZelote01/CW-PC_portfolio.git, ensuite analyser dans son entièreté tous les fichiers sans exception. Après analyse, tester le portfolio et le dashboard d'administration et vérifier les configurations netlify."
 
 backend:
   - task: "Correction des erreurs de chargement - Installation des dépendances backend"
