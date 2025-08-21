@@ -60,6 +60,10 @@ chainlit.md
 
 # Deployment
 .vercel
+.netlify/
+
+# Netlify CLI
+.netlify
 
 # Data and databases
 agenthub/agents/youtube/db
