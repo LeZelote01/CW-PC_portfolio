@@ -168,6 +168,9 @@ frontend:
         - working: true
           agent: "main"
           comment: "✅ Page Portfolio testée avec succès. Projets affichés avec filtres par catégorie. Cartes visuelles attrayantes pour Documentation API, Campagne SaaS, etc."
+        - working: true
+          agent: "testing"
+          comment: "✅ Tests Playwright page Portfolio réussis. Navigation depuis accueil fonctionnelle, filtres catégories (Tous, Content Strategy, Copywriting, Technical Writing) opérationnels, projets affichés incluant 'Documentation Technique API' comme requis. Interface responsive et API projets intégrée."
 
   - task: "Configuration et intégration Frontend-Backend"
     implemented: true
