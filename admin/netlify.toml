@@ -2,7 +2,7 @@
 # À déployer comme site séparé sur Netlify
 
 [build]
-  base = "."
+  base = "admin"
   publish = "build"
   command = "yarn build"
 
